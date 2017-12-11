@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+  "name": "ReaderPro",
+  "version": "0.2",
+  "description": "Helpful Text-to-Speech for Easy Browsing",
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": ["jquery-3.2.1.min.js","content.js"]
+    }
+  ],
+  "browser_action": {
+    "default_icon": "logo-32.png"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  }
+}
