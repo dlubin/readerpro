@@ -2,11 +2,27 @@
 
 var state = "idle";
 
+//New tab event - Request Audio from background
+requestSynth = function(text){
+  chrome.runtime.sendMessage({message: "synth", text: text}, function(response){
+    if(response["status"] != 1){
+      console.log("Something went wrong");
+    }
+  });
+}
+
 //Receive message from background
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if(request.message == "state_selecting"){
       selecting();      
+    }else if(request.message == "state_idle"){
+      state = "idle";
+      $("p").unbind("mouseover",hoverListener);
+      //Don't unbind mouseout to ensure that if something was already highlighted, 
+      //it still gets unhighlighted on mouseout
+  
+      console.log("ReaderPro - Now in idle mode");
     }
   }
 );
@@ -32,10 +48,14 @@ $(document).contextmenu(
   }
 );
 
+//When you click in selector mode, return to idle mode and, if text is highlighted,
+//read it
 $(document).click(
-  function(){
+  function(e){
     if(state == "selecting"){
-
+      var target = e.target;
+      var text = $(target).text();
+      requestSynth(text);
     }
   }
 )
